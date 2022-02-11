@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:dev_app/Page1.dart';
-import 'package:dev_app/Page2.dart';
-import 'package:dev_app/Page3.dart';
-import 'package:dev_app/Page4.dart';
+import 'package:dev_app/Page3.dart' show Page3;
+import 'package:dev_app/Page4.dart' show Page4;
 
 void main() {
   runApp(const MyApp());
@@ -34,10 +31,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  int _salary = 0;
-  int _payment = 0;
-  int _result = 0;
   late PageController _pageController;
   int _selectedIndex = 0;
   var _pages = [
@@ -66,9 +59,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      // appBar: AppBar(
+      //   title: Text(widget.title),
+      // ),
       body: PageView(
         controller: _pageController,
         onPageChanged: _onPageChanged,
