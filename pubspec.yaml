@@ -32,6 +32,8 @@ dependencies:
     sdk: flutter
   path: 
   sqflite: 
+  file_picker:
+  path_provider:
 
 dev_dependencies:
   flutter_lints: ^1.0.0

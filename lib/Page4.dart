@@ -123,6 +123,17 @@ class _Page4 extends State<Page4> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
+                                Expanded( 
+                                  child: Container(
+                                    color: Colors.black,
+                                    child: Text('$index',style:TextStyle(color: Colors.white)),
+                                  )
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
                                 Container(
                                   width: 100,
                                   child: Text(this._resultList[index].myName == null ? "" : this._resultList[index].myName),

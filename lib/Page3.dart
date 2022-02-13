@@ -21,8 +21,60 @@ class _Page3 extends State<Page3> {
   String _yourName = "";
   List<String> _gameResult = [];
   /** 表示更新 */
-  void updateState(){
+  void updateState(BuildContext context){
     setState(() {});
+    if(isGameOver()){
+      showGameOverDialog(context);
+    }
+  }
+  /** ゲーム終了ダイアログ表示 */
+  void showGameOverDialog(BuildContext context) async{
+    var result = await showDialog<int>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text('確認',style:TextStyle(fontSize: 12)),
+          content: Text('ゲームが終了しました。ゲーム結果を一時保存します。よろしいですか？'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () => Navigator.of(context).pop(0),
+            ),
+            TextButton(
+              child: Text('OK'),
+              onPressed: () => Navigator.of(context).pop(1),
+            ),
+          ],
+        );
+      },
+    );
+    if(1 == result){
+      checkGameIsOver();
+      this._gameResult.add(
+        this._myPoint.toString()
+        + "-"
+        + this._youPoint.toString());
+      this._myPoint = 0;
+      this._youPoint = 0;
+      setState(() {});
+    } else {
+    }
+  }
+  /** ゲーム終了判定 */
+  bool isGameOver(){
+    if(11 == this._myPoint && 10 > this._youPoint){
+    } else if(11 == this._youPoint && 10 > this._myPoint){
+    } else if(11 < this._myPoint || 11 < this._youPoint){
+      if(2 == this._myPoint - this._youPoint){
+      } else if(2 == this._youPoint - this._myPoint){
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+    return true;
   }
   /** ゲーム終了判定 */
   bool checkGameIsOver(){
@@ -84,57 +136,97 @@ class _Page3 extends State<Page3> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(' '),
-            TextButton(
-              child: Text('$_myPoint',style:TextStyle(fontSize: 64)),
-              style: TextButton.styleFrom(
-                fixedSize: Size(100,180),
-                backgroundColor: Colors.black,
-                primary: Colors.white,
+            GestureDetector(
+              child: Container(
+                color: Colors.black,
+                width:100,
+                height:180,
+                alignment: const Alignment(0,0),
+                child: Text('$_myPoint',style:TextStyle(fontSize: 64,color:Colors.white,)),
               ),
-              onPressed: (){
+              onTap: (){
                 this._myPoint++;
-                updateState();
+                updateState(context);
+              },
+              onVerticalDragEnd:(details) {
+                if(details.primaryVelocity! > 0) {
+                  this._myPoint--;
+                  updateState(context);
+                } else {
+                  this._myPoint++;
+                  updateState(context);
+                }
               },
             ),
             const Text(' '),
-            TextButton(
-              child: Text('$_myMatchPoint',style:TextStyle(fontSize: 32)),
-              style: TextButton.styleFrom(
-                fixedSize: Size(50,90),
-                backgroundColor: Colors.black,
-                primary: Colors.white,
+            GestureDetector(
+              child: Container(
+                width: 50,
+                height: 90,
+                color:Colors.black,
+                alignment:const Alignment(0,0),
+                child: Text('$_myMatchPoint',style:TextStyle(fontSize: 32,color:Colors.white)),
               ),
-              onPressed: (){
+              onTap: (){
                 this._myMatchPoint++;
-                updateState();
+                updateState(context);
+              },
+              onVerticalDragEnd: (details){
+                if(details.primaryVelocity! > 0){
+                  this._myMatchPoint--;
+                  updateState(context);
+                }else {
+                  this._myMatchPoint++;
+                  updateState(context);
+                }
               },
             ),
             const Text(' '),
             const Text('-'),
             const Text(' '),
-            TextButton(
-              child: Text('$_youMatchPoint',style:TextStyle(fontSize: 32)),
-              style: TextButton.styleFrom(
-                fixedSize: Size(50,90),
-                backgroundColor: Colors.black,
-                primary: Colors.white,
+            GestureDetector(
+              child: Container(
+                color: Colors.black,
+                width:50,
+                height:90,
+                alignment: const Alignment(0,0),
+                child: Text('$_youMatchPoint',style:TextStyle(fontSize: 32,color:Colors.white)),
               ),
-              onPressed: (){
+              onTap: (){
                 this._youMatchPoint++;
-                updateState();
+                updateState(context);
+              },
+              onVerticalDragEnd: (details){
+                if(details.primaryVelocity! > 0){
+                  this._youMatchPoint--;
+                  updateState(context);
+                }else{
+                  this._youMatchPoint++;
+                  updateState(context);
+                }
               },
             ),
             const Text(' '),
-            TextButton(
-              child: Text('$_youPoint',style:TextStyle(fontSize: 64)),
-              style: TextButton.styleFrom(
-                fixedSize: Size(100,180),
-                backgroundColor: Colors.black,
-                primary: Colors.white,
+            GestureDetector(
+              child: Container(
+                color: Colors.black,
+                width: 100,
+                height: 180,
+                alignment: const Alignment(0,0),
+                child : Text('$_youPoint',style:TextStyle(fontSize: 64,color:Colors.white)),
               ),
-              onPressed: (){
+              onTap: (){
                 this._youPoint++;
-                updateState();
+                updateState(context);
+              },
+              onVerticalDragEnd: (details){
+                if(details.primaryVelocity! > 0){
+                  this._youPoint--;
+                  updateState(context);
+                } else {
+                  this._youPoint++;
+                  updateState(context);
+                }
               },
             ),
             const Text(' '),
@@ -152,7 +244,7 @@ class _Page3 extends State<Page3> {
               ),
               onPressed: (){
                 this._myPoint--;
-                updateState();
+                updateState(context);
               },
             ),
             TextButton(
@@ -163,7 +255,7 @@ class _Page3 extends State<Page3> {
               ),
               onPressed: (){
                 this._myMatchPoint--;
-                updateState();
+                updateState(context);
               },
             ),
             Container(
@@ -177,7 +269,7 @@ class _Page3 extends State<Page3> {
               ),
               onPressed: (){
                 this._youMatchPoint--;
-                updateState();
+                updateState(context);
               },
             ),
             TextButton(
@@ -188,7 +280,7 @@ class _Page3 extends State<Page3> {
               ),
               onPressed: (){
                 this._youPoint--;
-                updateState();
+                updateState(context);
               },
             ),
           ],
@@ -240,7 +332,7 @@ class _Page3 extends State<Page3> {
                     },
                   );
                 }
-                updateState();
+                updateState(context);
               },
             ),
             Flexible(
@@ -352,57 +444,97 @@ class _Page3 extends State<Page3> {
             Row(
               children: <Widget>[
                 const Text(' '),
-                TextButton(
-                  child: Text('$_myPoint',style:TextStyle(fontSize: 64)),
-                  style: TextButton.styleFrom(
-                    fixedSize: Size(100,180),
-                    backgroundColor: Colors.black,
-                    primary: Colors.white,
+                GestureDetector(
+                  child: Container(
+                    color:Colors.black,
+                    width:100,
+                    height:180,
+                    alignment:const Alignment(0,0),
+                    child: Text('$_myPoint',style:TextStyle(fontSize: 64,color:Colors.white)),
                   ),
-                  onPressed: (){
+                  onTap: (){
                     this._myPoint++;
-                    updateState();
+                    updateState(context);
+                  },
+                  onVerticalDragEnd: (details){
+                    if(details.primaryVelocity! > 0){
+                      this._myPoint--;
+                      updateState(context);
+                    }else{
+                      this._myPoint++;
+                      updateState(context);
+                    }
                   },
                 ),
                 const Text(' '),
-                TextButton(
-                  child: Text('$_myMatchPoint',style:TextStyle(fontSize: 32)),
-                  style: TextButton.styleFrom(
-                    fixedSize: Size(50,90),
-                    backgroundColor: Colors.black,
-                    primary: Colors.white,
+                GestureDetector(
+                  child: Container(
+                    color:Colors.black,
+                    width:50,
+                    height:90,
+                    alignment: const Alignment(0,0),
+                    child: Text('$_myMatchPoint',style:TextStyle(fontSize: 32,color:Colors.white)),
                   ),
-                  onPressed: (){
+                  onTap: (){
                     this._myMatchPoint++;
-                    updateState();
+                    updateState(context);
+                  },
+                  onVerticalDragEnd: (details){
+                    if(details.primaryVelocity! > 0){
+                      this._myMatchPoint--;
+                      updateState(context);
+                    }else{
+                      this._myMatchPoint++;
+                      updateState(context);
+                    }
                   },
                 ),
                 const Text(' '),
                 const Text('-'),
                 const Text(' '),
-                TextButton(
-                  child: Text('$_youMatchPoint',style:TextStyle(fontSize: 32)),
-                  style: TextButton.styleFrom(
-                    fixedSize: Size(50,90),
-                    backgroundColor: Colors.black,
-                    primary: Colors.white,
+                GestureDetector(
+                  child:Container(
+                    color:Colors.black,
+                    width:50,
+                    height:90,
+                    alignment:const Alignment(0,0),
+                    child:Text('$_youMatchPoint',style:TextStyle(fontSize: 32,color:Colors.white)),
                   ),
-                  onPressed: (){
+                  onTap: (){
                     this._youMatchPoint++;
-                    updateState();
+                    updateState(context);
+                  },
+                  onVerticalDragEnd: (details){
+                    if(details.primaryVelocity! > 0){
+                      this._youMatchPoint--;
+                      updateState(context);
+                    }else{
+                      this._youMatchPoint++;
+                      updateState(context);
+                    }
                   },
                 ),
                 const Text(' '),
-                TextButton(
-                  child: Text('$_youPoint',style:TextStyle(fontSize: 64)),
-                  style: TextButton.styleFrom(
-                    fixedSize: Size(100,180),
-                    backgroundColor: Colors.black,
-                    primary: Colors.white,
+                GestureDetector(
+                  child:Container(
+                    color:Colors.black,
+                    width:100,
+                    height:180,
+                    alignment:const Alignment(0,0),
+                    child: Text('$_youPoint',style:TextStyle(fontSize: 64,color:Colors.white)),
                   ),
-                  onPressed: (){
+                  onTap: (){
                     this._youPoint++;
-                    updateState();
+                    updateState(context);
+                  },
+                  onVerticalDragEnd: (details){
+                    if(details.primaryVelocity! > 0){
+                      this._youPoint--;
+                      updateState(context);
+                    }else{
+                      this._youPoint++;
+                      updateState(context);
+                    }
                   },
                 ),
                 const Text(' '),
@@ -420,7 +552,7 @@ class _Page3 extends State<Page3> {
                   ),
                   onPressed: (){
                     this._myPoint--;
-                    updateState();
+                    updateState(context);
                   },
                 ),
                 TextButton(
@@ -431,7 +563,7 @@ class _Page3 extends State<Page3> {
                   ),
                   onPressed: (){
                     this._myMatchPoint--;
-                    updateState();
+                    updateState(context);
                   },
                 ),
                 Container(
@@ -445,7 +577,7 @@ class _Page3 extends State<Page3> {
                   ),
                   onPressed: (){
                     this._youMatchPoint--;
-                    updateState();
+                    updateState(context);
                   },
                 ),
                 TextButton(
@@ -456,7 +588,7 @@ class _Page3 extends State<Page3> {
                   ),
                   onPressed: (){
                     this._youPoint--;
-                    updateState();
+                    updateState(context);
                   },
                 ),
               ],
@@ -500,7 +632,7 @@ class _Page3 extends State<Page3> {
                       },
                     );
                   }
-                  updateState();
+                  updateState(context);
                 },
               ),
               TextButton(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dev_app/Page3.dart' show Page3;
 import 'package:dev_app/Page4.dart' show Page4;
+import 'package:dev_app/Page5.dart' show Page5;
 
 void main() {
   runApp(const MyApp());
@@ -36,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var _pages = [
     Page3(),
     Page4(),
+    Page5(),
   ];
   
   @override
