@@ -44,9 +44,6 @@ class _Page4 extends State<Page4> {
   Widget build(BuildContext context) {
     this._initialize();
     return Scaffold(
-      appBar: AppBar(
-        title: Text("試合結果"),
-      ),
       body: Center(
         // 1列目
         child: Column(
