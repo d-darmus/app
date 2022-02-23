@@ -3,6 +3,7 @@ import 'package:path/path.dart';
 import 'dart:async';
 
 class MatchResult{
+  var recId;
   final int myMatchPoint;
   final int youMatchPoint;
   final String myName;
@@ -10,6 +11,7 @@ class MatchResult{
   final String gameResult;
 
   MatchResult({
+    this.recId,
     required this.myMatchPoint,
     required this.youMatchPoint,
     required this.myName,
@@ -19,6 +21,7 @@ class MatchResult{
   
   Map<String, dynamic> toMap(){
     return {
+      'recId':recId,
       'myMatchPoint':myMatchPoint,
       'youMatchPoint':youMatchPoint,
       'myName':myName,
@@ -47,6 +50,23 @@ class MatchResult{
     final List<Map<String, dynamic>> maps = await db.query('match_result');
     return List.generate(maps.length,(i){
       return MatchResult(
+        recId: maps[i]['recId'],
+        myMatchPoint: int.parse(maps[i]['myMatchPoint']),
+        youMatchPoint: int.parse(maps[i]['youMatchPoint']),
+        myName: maps[i]['myName'],
+        yourName: maps[i]['yourName'],
+        gameResult: maps[i]['gameResult'],
+      );
+    });
+  }
+
+  /** データの取得 */
+  static Future<List<MatchResult>> getDatasFromRecId(int recId) async {
+    final Database db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('match_result',where: "recId=?", whereArgs:[recId]);
+    return List.generate(maps.length,(i){
+      return MatchResult(
+        recId: maps[i]['recId'],
         myMatchPoint: int.parse(maps[i]['myMatchPoint']),
         youMatchPoint: int.parse(maps[i]['youMatchPoint']),
         myName: maps[i]['myName'],
@@ -71,8 +91,8 @@ class MatchResult{
     final db = await database;
     await db.delete(
       'match_result',
-      // where: "recId = ?",
-      // whereArgs: [recId],
+      where: "recId = ?",
+      whereArgs: [recId],
     );
   }
 }

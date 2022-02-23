@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dev_app/Page3.dart' show Page3;
+import 'package:dev_app/editPage/edit_page.dart';
 import 'package:dev_app/Page4.dart' show Page4;
 import 'package:dev_app/TokutenbanPage.dart';
 
@@ -34,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   final List<Tab> tabs = <Tab>[
     const Tab(text:'得点板'),
     const Tab(text:'試合結果'),
+    // const Tab(text:'編集'),
   ];
   late TabController _tabController;
   
@@ -71,6 +72,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   Widget _createTab(Tab tab){
     if(tabs[0] == tab){ return const TokutenbanPage(); }
     if(tabs[1] == tab){ return const Page4(); }
+    // if(tabs[2] == tab){ return const EditPage(); }
     return const TokutenbanPage();
   }
 }

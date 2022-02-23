@@ -13,6 +13,9 @@ class TokutenbanPage extends StatefulWidget {
 }
 
 class _TokutenbanPage extends State<TokutenbanPage> {
+  static const double POINT_SIZE_HORIZON = 170;
+  static const double POINT_SIZE_VERTICAL = 80;
+  bool isHorizon = true;
   int _myPoint = 0;
   int _myMatchPoint = 0;
   int _youPoint = 0;
@@ -29,7 +32,8 @@ class _TokutenbanPage extends State<TokutenbanPage> {
       body: LayoutBuilder(
         builder:(context, constraints) {
           if (constraints.maxWidth < constraints.maxHeight){
-            return _verticalLayout(context);
+            isHorizon = false;
+            return _horizontalLayout(context);
           } else {
             return _horizontalLayout(context);
           }
@@ -77,6 +81,11 @@ class _TokutenbanPage extends State<TokutenbanPage> {
       );
       if(1 == _result){
         setState((){
+          if(_myPoint > _youPoint){
+            _myMatchPoint++;
+          } else {
+            _youMatchPoint++;
+          }
           _gameResult.add(_myPoint.toString()+'-'+_youPoint.toString());
           _myPoint = 0;
           _youPoint = 0;
@@ -153,6 +162,13 @@ class _TokutenbanPage extends State<TokutenbanPage> {
 
   /** 得点版Widget */
   Widget _tokutenBanWidget(){
+    double _pointSize = POINT_SIZE_HORIZON;
+    if(isHorizon){
+      _pointSize = POINT_SIZE_HORIZON;
+    } else {
+      _pointSize = POINT_SIZE_VERTICAL;
+    }
+
     return Row(
       children: [
         Expanded(
@@ -161,7 +177,7 @@ class _TokutenbanPage extends State<TokutenbanPage> {
             margin:const EdgeInsets.only(left:4),
             alignment: Alignment.center,
             color: Colors.black, 
-            child:Text('$_myPoint',style:const TextStyle(color:Colors.white,fontSize:170)),
+            child:Text('$_myPoint',style: TextStyle(color:Colors.white,fontSize:_pointSize)),
             height: MediaQuery.of(context).size.height * 0.62,),
           onTap:(){
             setState((){this._myPoint++;});
@@ -230,7 +246,7 @@ class _TokutenbanPage extends State<TokutenbanPage> {
               margin:const EdgeInsets.only(right:4),
               alignment: Alignment.center,
               color: Colors.black, 
-              child:Text('$_youPoint',style:const TextStyle(color:Colors.white,fontSize:170)),
+              child:Text('$_youPoint',style: TextStyle(color:Colors.white,fontSize:_pointSize)),
               height: MediaQuery.of(context).size.height * 0.62,),
             onTap:(){
               setState((){this._youPoint++;});
@@ -280,6 +296,7 @@ class _TokutenbanPage extends State<TokutenbanPage> {
         _myMatchPoint = 0;
         _youPoint = 0;
         _youMatchPoint = 0;
+        _gameResult.clear();
       });
     }
   }

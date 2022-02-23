@@ -1,6 +1,6 @@
 
 import 'dart:convert';
-
+import 'package:dev_app/editPage/edit_page.dart';
 import 'package:dev_app/MatchResult.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +14,7 @@ class Page4 extends StatefulWidget {
 }
 
 class _Page4 extends State<Page4> {
+  static const double BOX_SIZE = 30;
   List<MatchResult> _resultList = [];
   List<dynamic> _gameResult = [];
   void _initialize() async{
@@ -42,275 +43,164 @@ class _Page4 extends State<Page4> {
 
   @override
   Widget build(BuildContext context) {
-    this._initialize();
+    _initialize();
     return Scaffold(
       body: Center(
-        // 1列目
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // 1行目
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  child: const Text('表示'),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.white,
-                    onPrimary: Colors.black,
-                    shape: const StadiumBorder(),
-                  ),
-                  onPressed: () async{
-                    this._resultList = await MatchResult.getDatas(); 
-                    setState(() {});
-                  },
-                ),
-                ElevatedButton(
-                  child: const Text('削除'),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.white,
-                    onPrimary: Colors.black,
-                    shape: const StadiumBorder(),
-                  ),
-                  onPressed: () async{
-                    var result = await showDialog<int>(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext context){
-                        return AlertDialog(
-                          title: Text('確認',style:TextStyle(fontSize: 12)),
-                          content: Text(
-                            '全てのデータを削除します。よろしいですか？'
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              child: Text('Cancel'),
-                              onPressed: () => Navigator.of(context).pop(0),
-                            ),
-                            TextButton(
-                              child: Text('OK'),
-                              onPressed: () => Navigator.of(context).pop(1),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    if(1==result){
-                      await MatchResult.deleteData(0);
-                      this._initialize();
-                    }
-                  },
-                ),
-              ],
-            ),
             Flexible(
               child: ListView.builder(
                 itemCount: this._resultList.length,
                 itemBuilder: (BuildContext context, int index){
-                  return (
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
-                      ),
-                      margin: EdgeInsets.only(top: 5),
-                      child:
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded( 
-                                  child: Container(
-                                    color: Colors.black,
-                                    child: Text('$index',style:TextStyle(color: Colors.white)),
-                                  )
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 100,
-                                  child: Text(this._resultList[index].myName == null ? "" : this._resultList[index].myName),
-                                ),
-                                Container(
-                                  width: 25,
-                                  decoration: BoxDecoration(
-                                    border: Border(left: BorderSide(color: Colors.grey),),
-                                  ),
-                                  child: 
-                                    Text(
-                                      this._gameResult[index].length > 0 ? 
-                                        this._getMyPoint(this._gameResult[index][0].toString())
-                                        : ""
-                                    )
-                                ),
-                                Container(
-                                  width: 25,
-                                  decoration: BoxDecoration(
-                                    border: Border(left: BorderSide(color: Colors.grey),),
-                                  ),
-                                  child: 
-                                    Text(
-                                      this._gameResult[index].length > 1 ? 
-                                        this._getMyPoint(this._gameResult[index][1].toString())
-                                        : ""
-                                    )
-                                ),
-                                Container(
-                                  width: 25,
-                                  decoration: BoxDecoration(
-                                    border: Border(left: BorderSide(color: Colors.grey),),
-                                  ),
-                                  child: 
-                                    Text(
-                                      this._gameResult[index].length > 2 ? 
-                                        this._getMyPoint(this._gameResult[index][2].toString())
-                                        : ""
-                                    )
-                                ),
-                                Container(
-                                  width: 25,
-                                  decoration: BoxDecoration(
-                                    border: Border(left: BorderSide(color: Colors.grey),),
-                                  ),
-                                  child: 
-                                    Text(
-                                      this._gameResult[index].length > 3 ? 
-                                        this._getMyPoint(this._gameResult[index][3].toString())
-                                        : ""
-                                    )
-                                ),
-                                Container(
-                                  width: 25,
-                                  decoration: BoxDecoration(
-                                    border: Border(left: BorderSide(color: Colors.grey),right:BorderSide(color:Colors.grey)),
-                                  ),
-                                  child: 
-                                    Text(
-                                      this._gameResult[index].length > 4 ? 
-                                        this._getMyPoint(this._gameResult[index][4].toString())
-                                        : ""
-                                    )
-                                ),
-                                Expanded(
-                                  child: 
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border(right:BorderSide(color:Colors.red)),
-                                      ),
-                                      child: 
-                                        Text(
-                                          this._resultList[index].myMatchPoint == null ?
-                                            ""
-                                            : this._resultList[index].myMatchPoint.toString()
-                                          ,style: TextStyle(color: Colors.black, fontWeight:FontWeight.bold,)
-                                          ,textAlign: TextAlign.center,
-                                        )
-                                    ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              decoration: BoxDecoration(border:Border.all(color:Colors.grey)),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 100,
-                                  child: Text(this._resultList[index].yourName == null ? "" : this._resultList[index].yourName),
-                                ),
-                                Container(
-                                  width: 25,
-                                  decoration: BoxDecoration(
-                                    border: Border(left: BorderSide(color: Colors.grey),),
-                                  ),
-                                  child: 
-                                    Text(
-                                      this._gameResult[index].length > 0 ? 
-                                        this._getYourPoint(this._gameResult[index][0].toString())
-                                        : ""
-                                    )
-                                ),
-                                Container(
-                                  width: 25,
-                                  decoration: BoxDecoration(
-                                    border: Border(left: BorderSide(color: Colors.grey),),
-                                  ),
-                                  child: 
-                                    Text(
-                                      this._gameResult[index].length > 1 ? 
-                                        this._getYourPoint(this._gameResult[index][1].toString())
-                                        : ""
-                                    )
-                                ),
-                                Container(
-                                  width: 25,
-                                  decoration: BoxDecoration(
-                                    border: Border(left: BorderSide(color: Colors.grey),),
-                                  ),
-                                  child: 
-                                    Text(
-                                      this._gameResult[index].length > 2 ? 
-                                        this._getYourPoint(this._gameResult[index][2].toString())
-                                        : ""
-                                    )
-                                ),
-                                Container(
-                                  width: 25,
-                                  decoration: BoxDecoration(
-                                    border: Border(left: BorderSide(color: Colors.grey),),
-                                  ),
-                                  child: 
-                                    Text(
-                                      this._gameResult[index].length > 3 ? 
-                                        this._getYourPoint(this._gameResult[index][3].toString())
-                                        : ""
-                                    )
-                                ),
-                                Container(
-                                  width: 25,
-                                  decoration: BoxDecoration(
-                                    border: Border(left: BorderSide(color: Colors.grey),right:BorderSide(color:Colors.grey)),
-                                  ),
-                                  child: 
-                                    Text(
-                                      this._gameResult[index].length > 4 ? 
-                                        this._getYourPoint(this._gameResult[index][4].toString())
-                                        : ""
-                                    )
-                                ),
-                                Expanded(
-                                  child:
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border(right:BorderSide(color:Colors.red)),
-                                      ),
-                                      child: 
-                                        Text(
-                                          this._resultList[index].youMatchPoint == null ?
-                                            ""
-                                            : this._resultList[index].youMatchPoint.toString()
-                                          ,textAlign: TextAlign.center
-                                          ,style: TextStyle(color: Colors.black, fontWeight:FontWeight.bold,),
-                                        )
-                                    ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                    )
-                  );
+                  return _matchDataWidget(index);
                 },
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+  
+  Widget _matchDataWidget(int index){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children:[
+        headerBarRow(index),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child:Container(
+          child:Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children:[
+              dataBox(index),
+              Container(alignment: Alignment.center,width:BOX_SIZE*2,height:BOX_SIZE*2,child:editButton(index),color:Colors.black12),
+            ],
+          )),
+        ),
+      ],
+    );
+  }
+
+  static Widget headerBarRow(int index){
+    int num = index + 1;
+    return Container(color:Colors.black87, child: Row(
+      mainAxisSize: MainAxisSize.max,
+      children:[
+        Container(alignment: Alignment.center,height:BOX_SIZE,child:Text('No. $num',style:const TextStyle(color:Colors.white))),
+      ],
+    ));
+  }
+
+  Widget dataBox(int index){
+    return Column(
+      children:[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
+              alignment: Alignment.center,
+              width: BOX_SIZE*3,height:BOX_SIZE,
+              child: Text(_resultList[index].myName.isEmpty ? "" : _resultList[index].myName),
+            ),
+            Container(
+              decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
+              alignment: Alignment.center,
+              width: BOX_SIZE,height: BOX_SIZE,
+              child: Text(_gameResult[index].length > 0 ? _getMyPoint(_gameResult[index][0].toString()) : ""),
+            ),
+            Container(
+              decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
+              alignment: Alignment.center,
+              width: BOX_SIZE,height: BOX_SIZE,
+              child: Text(_gameResult[index].length > 1 ? _getMyPoint(_gameResult[index][1].toString()) : ""),
+            ),
+            Container(
+              decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
+              alignment: Alignment.center,
+              width: BOX_SIZE,height: BOX_SIZE,
+              child: Text(_gameResult[index].length > 2 ? _getMyPoint(_gameResult[index][2].toString()) : ""),
+            ),
+            Container(
+              decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
+              alignment: Alignment.center,
+              width: BOX_SIZE,height: BOX_SIZE,
+              child: Text(_gameResult[index].length > 3 ? _getMyPoint(_gameResult[index][3].toString()) : ""),
+            ),
+            Container(
+              decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
+              alignment: Alignment.center,
+              width: BOX_SIZE,height: BOX_SIZE,
+              child: Text(_gameResult[index].length > 4 ? _getMyPoint(_gameResult[index][4].toString()) : ""),
+            ),
+            Container(
+              decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
+              alignment: Alignment.center,
+              width: BOX_SIZE*2,height: BOX_SIZE,
+              child: Text(_resultList[index].myMatchPoint.toString(),style:const TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Container(
+              decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
+              alignment: Alignment.center,
+              width: BOX_SIZE*3,height:BOX_SIZE,
+              child: Text(_resultList[index].yourName.isEmpty ? "" : _resultList[index].yourName),
+            ),
+            Container(
+              decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
+              alignment: Alignment.center,
+              width: BOX_SIZE,height: BOX_SIZE,
+              child: Text(_gameResult[index].length > 0 ? _getYourPoint(_gameResult[index][0].toString()) : ""),
+            ),
+            Container(
+              decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
+              alignment: Alignment.center,
+              width: BOX_SIZE,height: BOX_SIZE,
+              child: Text(_gameResult[index].length > 1 ? _getYourPoint(_gameResult[index][1].toString()) : ""),
+            ),
+            Container(
+              decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
+              alignment: Alignment.center,
+              width: BOX_SIZE,height: BOX_SIZE,
+              child: Text(_gameResult[index].length > 2 ? _getYourPoint(_gameResult[index][2].toString()) : ""),
+            ),
+            Container(
+              decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
+              alignment: Alignment.center,
+              width: BOX_SIZE,height: BOX_SIZE,
+              child: Text(_gameResult[index].length > 3 ? _getYourPoint(_gameResult[index][3].toString()) : ""),
+            ),
+            Container(
+              decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
+              alignment: Alignment.center,
+              width: BOX_SIZE,height: BOX_SIZE,
+              child: Text(_gameResult[index].length > 4 ? _getYourPoint(_gameResult[index][4].toString()) : ""),
+            ),
+            Container(
+              decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
+              alignment: Alignment.center,
+              width: BOX_SIZE*2,height: BOX_SIZE,
+              child: Text(_resultList[index].youMatchPoint.toString(),style:const TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget editButton(int index){
+    return ElevatedButton(
+      child: const Text('編集'),
+      onPressed: (){
+        Navigator.push(context, MaterialPageRoute(
+          builder:(context)=>EditPage(recId:_resultList[index].recId)
+        ));
+      },
     );
   }
 }
