@@ -49,6 +49,7 @@ class _Page4 extends State<Page4> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            _noDataMessage(),
             Flexible(
               child: ListView.builder(
                 itemCount: this._resultList.length,
@@ -61,6 +62,17 @@ class _Page4 extends State<Page4> {
         ),
       ),
     );
+  }
+
+  Widget _noDataMessage(){
+    if(0==_resultList.length){
+      return Container(
+        alignment: Alignment.center,
+        child:const Text('試合結果がありません。')
+      );
+    }else{
+      return const Text('');
+    }
   }
   
   Widget _matchDataWidget(int index){
