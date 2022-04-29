@@ -1,4 +1,4 @@
-package com.example.dev_app
+package jp.darmus.dev_app
 
 import io.flutter.embedding.android.FlutterActivity
 

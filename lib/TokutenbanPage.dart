@@ -25,6 +25,7 @@ class _TokutenbanPage extends State<TokutenbanPage> {
   List<String> _gameResult = [];
   final TextEditingController _myNameController = TextEditingController();
   final TextEditingController _yourNameController = TextEditingController();
+  bool _isLeftMe = true;
 
   @override
   Widget build(BuildContext context){
@@ -86,7 +87,11 @@ class _TokutenbanPage extends State<TokutenbanPage> {
           } else {
             _youMatchPoint++;
           }
-          _gameResult.add(_myPoint.toString()+'-'+_youPoint.toString());
+          if(_isLeftMe){
+            _gameResult.add(_myPoint.toString()+'-'+_youPoint.toString());
+          } else {
+            _gameResult.add(_youPoint.toString()+'-'+_myPoint.toString());
+          }
           _myPoint = 0;
           _youPoint = 0;
         });
@@ -96,6 +101,18 @@ class _TokutenbanPage extends State<TokutenbanPage> {
 
   /** データ登録 */
   void _registData() async{
+    if(!_isLeftMe){
+      _isLeftMe = !_isLeftMe;
+      String tmp = _myNameController.text;
+      _myNameController.text = _yourNameController.text;
+      _yourNameController.text = tmp;
+      int num = _youMatchPoint;
+      _youMatchPoint = _myMatchPoint;
+      _myMatchPoint = num;
+      num = _youPoint;
+      _youPoint = _myPoint;
+      _myPoint = num;
+    }
     String _jsonGameResult = jsonEncode(this._gameResult);
     MatchResult _data = MatchResult(
       myMatchPoint: this._myMatchPoint
@@ -198,6 +215,23 @@ class _TokutenbanPage extends State<TokutenbanPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children:[
+              Container(
+                margin:const EdgeInsets.only(top:0),
+                child:TextButton(child:Image.asset('assets/button01.png'),style:TextButton.styleFrom(fixedSize: const Size(200,60),primary: Colors.black),onPressed:(){
+                  setState((){
+                    _isLeftMe = !_isLeftMe;
+                    String tmp = _myNameController.text;
+                    _myNameController.text = _yourNameController.text;
+                    _yourNameController.text = tmp;
+                    int num = _youMatchPoint;
+                    _youMatchPoint = _myMatchPoint;
+                    _myMatchPoint = num;
+                    num = _youPoint;
+                    _youPoint = _myPoint;
+                    _myPoint = num;
+                  });
+                })
+              ),
               Row(mainAxisAlignment: MainAxisAlignment.center,children:[
                 Expanded(
                   child: GestureDetector(child:Container(
@@ -269,13 +303,27 @@ class _TokutenbanPage extends State<TokutenbanPage> {
 
   /** アラート */
   void alertEndMatch(BuildContext context) async {
+    String _message = 
+      "以下の結果を保存します。よろしいですか？\n"
+      +_myNameController.text+" "+_yourNameController.text+"\n"
+      +_myMatchPoint.toString()+" - "+_youMatchPoint.toString()+"\n";
+    if(!_isLeftMe){
+      _message = 
+        "以下の結果を保存します。よろしいですか？\n"
+        +_yourNameController.text+" "+_myNameController.text+"\n"
+        +_youMatchPoint.toString()+" - "+_myMatchPoint.toString()+"\n";
+    }
+    for(String data in _gameResult){
+      _message += data+"\n";
+    }
+
     var result = await showDialog<int>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context){
         return AlertDialog(
           title: const Text('確認',style:TextStyle(fontSize: 12)),
-          content: const Text('以下の結果を保存します。よろしいですか？'),
+          content: Text(_message),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
@@ -302,19 +350,34 @@ class _TokutenbanPage extends State<TokutenbanPage> {
   }
 
   /** ゲーム結果Wiget */
-  static Widget getGameResult(List<String> list){
+  Widget getGameResult(List<String> list){
     List<Widget> widgetlist = [];
-    for(String data in list){
-      List<String> str = data.split('-');
-      widgetlist.add(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:[
-          Container(alignment: Alignment.center,width:20,child:Text(str[0]),),
-          const Text(' - '),
-          Container(alignment: Alignment.center,width:20,child:Text(str[1]),),
-        ])
-      );
+    if(_isLeftMe){
+      for(String data in list){
+        List<String> str = data.split('-');
+        widgetlist.add(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:[
+            Container(alignment: Alignment.center,width:20,child:Text(str[0]),),
+            const Text(' - '),
+            Container(alignment: Alignment.center,width:20,child:Text(str[1]),),
+          ])
+        );
+      }
+    } else {
+      for(String data in list){
+        List<String> str = data.split('-');
+        widgetlist.add(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:[
+            Container(alignment: Alignment.center,width:20,child:Text(str[1]),),
+            const Text(' - '),
+            Container(alignment: Alignment.center,width:20,child:Text(str[0]),),
+          ])
+        );
+      }
     }
 
     return Container(
