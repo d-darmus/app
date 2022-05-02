@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:dev_app/MatchResult.dart';
+import 'package:dev_app/db/MatchResult.dart';
 import 'dart:convert';
 
 class TokutenbanPage extends StatefulWidget {

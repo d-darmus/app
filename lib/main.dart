@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:dev_app/editPage/edit_page.dart';
-import 'package:dev_app/Page4.dart' show Page4;
-import 'package:dev_app/TokutenbanPage.dart';
+import 'package:dev_app/record/MatchResultPage.dart' show MatchResultPage;
+import 'package:dev_app/main/TokutenbanPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,32 +8,29 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: '得点版アプリ',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Develop'),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
+  const MyHomePage({Key? key}) : super(key: key);
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin{
+  /// タブ定義
   final List<Tab> tabs = <Tab>[
     const Tab(text:'得点板'),
     const Tab(text:'試合結果'),
-    // const Tab(text:'編集'),
   ];
   late TabController _tabController;
   
@@ -69,10 +65,12 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     );
   }
 
+  /// タブの切り替えメソッド
   Widget _createTab(Tab tab){
-    if(tabs[0] == tab){ return const TokutenbanPage(); }
-    if(tabs[1] == tab){ return const Page4(); }
-    // if(tabs[2] == tab){ return const EditPage(); }
-    return const TokutenbanPage();
+    switch(tab.text){
+      case "得点版" : return const TokutenbanPage();
+      case "試合結果" : return const MatchResultPage();
+      default : return const TokutenbanPage();
+    }
   }
 }
