@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dev_app/record/MatchResultPage.dart' show MatchResultPage;
-import 'package:dev_app/main/TokutenbanPage.dart';
+import 'package:dev_app/main/tokutenban_page.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:dev_app/db/MatchResult.dart';
 import 'dart:convert';
@@ -13,16 +12,14 @@ class TokutenbanPage extends StatefulWidget {
 }
 
 class _TokutenbanPage extends State<TokutenbanPage> {
-  static const double POINT_SIZE_HORIZON = 170;
-  static const double POINT_SIZE_VERTICAL = 80;
+  static const double pointSizeHorizon = 170;
+  static const double pointSizeVertical = 80;
   bool isHorizon = true;
   int _myPoint = 0;
   int _myMatchPoint = 0;
   int _youPoint = 0;
   int _youMatchPoint = 0;
-  String _myName = "";
-  String _yourName = "";
-  List<String> _gameResult = [];
+  List<String> gameResult = [];
   final TextEditingController _myNameController = TextEditingController();
   final TextEditingController _yourNameController = TextEditingController();
   bool _isLeftMe = true;
@@ -44,14 +41,14 @@ class _TokutenbanPage extends State<TokutenbanPage> {
   }
 
 
-  /** ゲーム終了判定 */
+  /// ゲーム終了判定
   void _isGameOver() async{
     bool _checkresult = true;
-    if(11 == this._myPoint && 10 > this._youPoint){
-    } else if(11 == this._youPoint && 10 > this._myPoint){
-    } else if(11 < this._myPoint || 11 < this._youPoint){
-      if(2 == this._myPoint - this._youPoint){
-      } else if(2 == this._youPoint - this._myPoint){
+    if(11 == _myPoint && 10 > _youPoint){
+    } else if(11 == _youPoint && 10 > _myPoint){
+    } else if(11 < _myPoint || 11 < _youPoint){
+      if(2 == _myPoint - _youPoint){
+      } else if(2 == _youPoint - _myPoint){
       } else {
         _checkresult = false;
       }
@@ -88,9 +85,9 @@ class _TokutenbanPage extends State<TokutenbanPage> {
             _youMatchPoint++;
           }
           if(_isLeftMe){
-            _gameResult.add(_myPoint.toString()+'-'+_youPoint.toString());
+            gameResult.add(_myPoint.toString()+'-'+_youPoint.toString());
           } else {
-            _gameResult.add(_youPoint.toString()+'-'+_myPoint.toString());
+            gameResult.add(_youPoint.toString()+'-'+_myPoint.toString());
           }
           _myPoint = 0;
           _youPoint = 0;
@@ -99,7 +96,7 @@ class _TokutenbanPage extends State<TokutenbanPage> {
     }
   }
 
-  /** データ登録 */
+  /// データ登録
   void _registData() async{
     if(!_isLeftMe){
       _isLeftMe = !_isLeftMe;
@@ -113,10 +110,10 @@ class _TokutenbanPage extends State<TokutenbanPage> {
       _youPoint = _myPoint;
       _myPoint = num;
     }
-    String _jsonGameResult = jsonEncode(this._gameResult);
+    String _jsonGameResult = jsonEncode(gameResult);
     MatchResult _data = MatchResult(
-      myMatchPoint: this._myMatchPoint
-      ,youMatchPoint: this._youMatchPoint
+      myMatchPoint: _myMatchPoint
+      ,youMatchPoint: _youMatchPoint
       ,myName: _myNameController.text
       ,yourName: _yourNameController.text
       ,gameResult: _jsonGameResult
@@ -124,12 +121,12 @@ class _TokutenbanPage extends State<TokutenbanPage> {
     await MatchResult.insertData(_data);
   }
 
-  /** 縦画面のレイアウト */
+  /// 縦画面のレイアウト
   Widget _verticalLayout(BuildContext context){
     return Container();
   }
 
-  /** 横画面のレイアウト */
+  /// 横画面のレイアウト
   Widget _horizontalLayout(BuildContext context){
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -146,7 +143,7 @@ class _TokutenbanPage extends State<TokutenbanPage> {
     );
   }
 
-  /** 入出力エリアWidget */
+  /// 入出力エリアWidget
   Widget _inputNames(){
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -162,7 +159,7 @@ class _TokutenbanPage extends State<TokutenbanPage> {
         ),
         Flexible(
           flex:3,
-          child:getGameResult(_gameResult),
+          child:getGameResult(gameResult),
         ),
         Flexible(
           flex:3,
@@ -177,13 +174,13 @@ class _TokutenbanPage extends State<TokutenbanPage> {
     );
   }
 
-  /** 得点版Widget */
+  /// 得点版Widget
   Widget _tokutenBanWidget(){
-    double _pointSize = POINT_SIZE_HORIZON;
+    double _pointSize = pointSizeHorizon;
     if(isHorizon){
-      _pointSize = POINT_SIZE_HORIZON;
+      _pointSize = pointSizeHorizon;
     } else {
-      _pointSize = POINT_SIZE_VERTICAL;
+      _pointSize = pointSizeVertical;
     }
 
     return Row(
@@ -197,7 +194,7 @@ class _TokutenbanPage extends State<TokutenbanPage> {
             child:Text('$_myPoint',style: TextStyle(color:Colors.white,fontSize:_pointSize)),
             height: MediaQuery.of(context).size.height * 0.62,),
           onTap:(){
-            setState((){this._myPoint++;});
+            setState((){_myPoint++;});
             _isGameOver();
           },
           onVerticalDragEnd: (details){
@@ -205,7 +202,7 @@ class _TokutenbanPage extends State<TokutenbanPage> {
               setState((){ _myPoint > 0 ? _myPoint-- : 0;});
               _isGameOver();
             }else{
-              setState((){this._myPoint++;});
+              setState((){_myPoint++;});
               _isGameOver();
             }
           },)
@@ -239,12 +236,12 @@ class _TokutenbanPage extends State<TokutenbanPage> {
                     margin:const EdgeInsets.only(left:4,right:2), color: Colors.black, child:
                     Text('$_myMatchPoint',style:const TextStyle(color:Colors.white,fontSize:90)),
                     height: MediaQuery.of(context).size.height * 0.4,),
-                  onTap:(){setState((){this._myMatchPoint++;});},
+                  onTap:(){setState((){_myMatchPoint++;});},
                   onVerticalDragEnd: (details){
                     if(details.primaryVelocity! > 0){
                       setState((){ _myMatchPoint > 0 ? _myMatchPoint-- : 0; });
                     }else{
-                      setState((){this._myMatchPoint++;});
+                      setState((){_myMatchPoint++;});
                     }
                   },)
                 ),
@@ -254,12 +251,12 @@ class _TokutenbanPage extends State<TokutenbanPage> {
                     margin:const EdgeInsets.only(left:2,right:4), color: Colors.black, child:
                     Text('$_youMatchPoint',style:const TextStyle(color:Colors.white,fontSize:90)),
                     height: MediaQuery.of(context).size.height * 0.4,),
-                  onTap: (){setState((){this._youMatchPoint++;});},
+                  onTap: (){setState((){_youMatchPoint++;});},
                   onVerticalDragEnd: (details){
                     if(details.primaryVelocity! > 0){
                       setState((){ _youMatchPoint > 0 ? _youMatchPoint-- : 0; });
                     }else{
-                      setState((){this._youMatchPoint++;});
+                      setState((){_youMatchPoint++;});
                     }
                   },)
                 ),
@@ -283,7 +280,7 @@ class _TokutenbanPage extends State<TokutenbanPage> {
               child:Text('$_youPoint',style: TextStyle(color:Colors.white,fontSize:_pointSize)),
               height: MediaQuery.of(context).size.height * 0.62,),
             onTap:(){
-              setState((){this._youPoint++;});
+              setState((){_youPoint++;});
               _isGameOver();
             },
             onVerticalDragEnd: (details){
@@ -291,7 +288,7 @@ class _TokutenbanPage extends State<TokutenbanPage> {
                 setState((){ _youPoint > 0 ? _youPoint-- : 0; });
                 _isGameOver();
               }else{
-                setState((){this._youPoint++;});
+                setState((){_youPoint++;});
                 _isGameOver();
               }
             },
@@ -301,7 +298,7 @@ class _TokutenbanPage extends State<TokutenbanPage> {
     );
   }
 
-  /** アラート */
+  /// アラート
   void alertEndMatch(BuildContext context) async {
     String _message = 
       "以下の結果を保存します。よろしいですか？\n"
@@ -313,7 +310,7 @@ class _TokutenbanPage extends State<TokutenbanPage> {
         +_yourNameController.text+" "+_myNameController.text+"\n"
         +_youMatchPoint.toString()+" - "+_myMatchPoint.toString()+"\n";
     }
-    for(String data in _gameResult){
+    for(String data in gameResult){
       _message += data+"\n";
     }
 
@@ -344,12 +341,12 @@ class _TokutenbanPage extends State<TokutenbanPage> {
         _myMatchPoint = 0;
         _youPoint = 0;
         _youMatchPoint = 0;
-        _gameResult.clear();
+        gameResult.clear();
       });
     }
   }
 
-  /** ゲーム結果Wiget */
+  /// ゲーム結果Wiget
   Widget getGameResult(List<String> list){
     List<Widget> widgetlist = [];
     if(_isLeftMe){
@@ -381,6 +378,7 @@ class _TokutenbanPage extends State<TokutenbanPage> {
     }
 
     return Container(
+      alignment: Alignment.center,
       width: 100,
       child:Column(
         children:widgetlist,
