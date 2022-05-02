@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:dev_app/MatchResult.dart';
+import 'package:dev_app/db/MatchResult.dart';
 import 'dart:convert';
 
 class EditPage extends StatelessWidget {
@@ -10,8 +10,8 @@ class EditPage extends StatelessWidget {
   var _yourName = "";
   var _myMatchPoint = "";
   var _youMatchPoint = "";
-  List<String> _myPoints = [];
-  List<String> _youPoints = [];
+  List<String> myPoints = [];
+  List<String> youPoints = [];
   final TextEditingController _myNameController = TextEditingController();
   final TextEditingController _yourNameController = TextEditingController();
   final TextEditingController _myMatchController = TextEditingController();
@@ -64,7 +64,7 @@ class EditPage extends StatelessWidget {
   Widget getRow1(){
     return Row(
       children:[
-        Container(width:100 ,child:const Text('名前：',style:TextStyle(fontSize:20,fontWeight: FontWeight.bold))),
+        Container(alignment:Alignment.center,width:100 ,child:const Text('名前：',style:TextStyle(fontSize:20,fontWeight: FontWeight.bold))),
         Flexible(
           flex:3,
           child: TextField(
@@ -91,7 +91,7 @@ class EditPage extends StatelessWidget {
   Widget getRow2(){
     return Row(
       children:[
-        Container(width:100 ,child:const Text('セット数：',style:TextStyle(fontSize:20,fontWeight: FontWeight.bold))),
+        Container(alignment:Alignment.center,width:100 ,child:const Text('セット数：',style:TextStyle(fontSize:20,fontWeight: FontWeight.bold))),
         Flexible(
           flex:3,
           child: TextField(
@@ -118,7 +118,7 @@ class EditPage extends StatelessWidget {
   Widget getRow3(var controller1, var controller2){
     return Row(
       children:[
-        Container(width: 100 ,child:const Text('')),
+        Container(alignment:Alignment.center,width: 100 ,child:const Text('')),
         Flexible(
           flex:3,
           child: TextField(
@@ -149,12 +149,12 @@ class EditPage extends StatelessWidget {
     _myMatchPoint = list[0].myMatchPoint.toString();
     _youMatchPoint = list[0].youMatchPoint.toString();
     dynamic json = jsonDecode(list[0].gameResult);
-    _myPoints.clear();
-    _youPoints.clear();
+    myPoints.clear();
+    youPoints.clear();
     for(int i = 0; i < json.length; i++){
       List<String> datas = json[i].toString().split('-');
-      _myPoints.add(datas[0]);
-      _youPoints.add(datas[1]);
+      myPoints.add(datas[0]);
+      youPoints.add(datas[1]);
     }
 
     // テキストボックス初期化
@@ -162,16 +162,16 @@ class EditPage extends StatelessWidget {
     _yourNameController.text = _yourName;
     _myMatchController.text = _myMatchPoint;
     _yourMatchController.text = _youMatchPoint;
-    _setOneMyPointController.text = _myPoints.length > 0 ? _myPoints[0] : "";
-    _setOneYouPointController.text = _myPoints.length > 0 ? _youPoints[0] : "";
-    _setTwoMyPointController.text = _myPoints.length > 1 ? _myPoints[1] : "";
-    _setTwoYouPointController.text = _myPoints.length > 1 ? _youPoints[1] : "";
-    _setThreeMyPointController.text = _myPoints.length > 2 ? _myPoints[2] : "";
-    _setThreeYouPointController.text = _myPoints.length > 2 ? _youPoints[2] : "";
-    _setFourMyPointController.text = _myPoints.length > 3 ? _myPoints[3] : "";
-    _setFourYouPointController.text = _myPoints.length > 3 ? _youPoints[3] : "";
-    _setFiveMyPointController.text = _myPoints.length > 4 ? _myPoints[4] : "";
-    _setFiveYouPointController.text = _myPoints.length > 4 ? _youPoints[4] : "";
+    _setOneMyPointController.text = myPoints.isNotEmpty ? myPoints[0] : "";
+    _setOneYouPointController.text = myPoints.isNotEmpty ? youPoints[0] : "";
+    _setTwoMyPointController.text = myPoints.length > 1 ? myPoints[1] : "";
+    _setTwoYouPointController.text = myPoints.length > 1 ? youPoints[1] : "";
+    _setThreeMyPointController.text = myPoints.length > 2 ? myPoints[2] : "";
+    _setThreeYouPointController.text = myPoints.length > 2 ? youPoints[2] : "";
+    _setFourMyPointController.text = myPoints.length > 3 ? myPoints[3] : "";
+    _setFourYouPointController.text = myPoints.length > 3 ? youPoints[3] : "";
+    _setFiveMyPointController.text = myPoints.length > 4 ? myPoints[4] : "";
+    _setFiveYouPointController.text = myPoints.length > 4 ? youPoints[4] : "";
   }
 
   void _updateData() async{

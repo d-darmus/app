@@ -1,25 +1,25 @@
 
 import 'dart:convert';
 import 'package:dev_app/editPage/edit_page.dart';
-import 'package:dev_app/MatchResult.dart';
+import 'package:dev_app/db/MatchResult.dart';
 import 'package:flutter/material.dart';
 
-class Page4 extends StatefulWidget {
-  const Page4({Key? key}) : super(key: key);
+class MatchResultPage extends StatefulWidget {
+  const MatchResultPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState(){
-    return _Page4();
+    return _MatchResultPage();
   }
 }
 
-class _Page4 extends State<Page4> {
-  static const double BOX_SIZE = 30;
+class _MatchResultPage extends State<MatchResultPage> {
+  static const double boxSize = 30;
   List<MatchResult> _resultList = [];
-  List<dynamic> _gameResult = [];
+  List<dynamic> gameResult = [];
   void _initialize() async{
-    this._resultList = await MatchResult.getDatas();
-    this._convertGameResultJson(); 
+    _resultList = await MatchResult.getDatas();
+    _convertGameResultJson(); 
     try{
       setState(() {});
     } catch(e){
@@ -27,9 +27,9 @@ class _Page4 extends State<Page4> {
     }
   }
   void _convertGameResultJson(){
-    this._gameResult.clear();
-    for( MatchResult match in this._resultList){
-      this._gameResult.add(jsonDecode(match.gameResult));
+    gameResult.clear();
+    for( MatchResult match in _resultList){
+      gameResult.add(jsonDecode(match.gameResult));
     }
   }
   String _getMyPoint(String str){
@@ -52,7 +52,7 @@ class _Page4 extends State<Page4> {
             _noDataMessage(),
             Flexible(
               child: ListView.builder(
-                itemCount: this._resultList.length,
+                itemCount: _resultList.length,
                 itemBuilder: (BuildContext context, int index){
                   return _matchDataWidget(index);
                 },
@@ -65,7 +65,7 @@ class _Page4 extends State<Page4> {
   }
 
   Widget _noDataMessage(){
-    if(0==_resultList.length){
+    if(_resultList.isEmpty){
       return Container(
         alignment: Alignment.center,
         child:const Text('試合結果がありません。')
@@ -83,13 +83,14 @@ class _Page4 extends State<Page4> {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child:Container(
-          child:Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children:[
-              dataBox(index),
-              Container(alignment: Alignment.center,width:BOX_SIZE*2,height:BOX_SIZE*2,child:editButton(index),color:Colors.black12),
-            ],
-          )),
+            alignment: Alignment.center,
+            child:Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children:[
+                dataBox(index),
+                Container(alignment: Alignment.center,width:boxSize*2,height:boxSize*2,child:editButton(index),color:Colors.black12),
+              ],
+            )),
         ),
       ],
     );
@@ -100,7 +101,7 @@ class _Page4 extends State<Page4> {
     return Container(color:Colors.black87, child: Row(
       mainAxisSize: MainAxisSize.max,
       children:[
-        Container(alignment: Alignment.center,height:BOX_SIZE,child:Text('No. $num',style:const TextStyle(color:Colors.white))),
+        Container(alignment: Alignment.center,height:boxSize,child:Text('No. $num',style:const TextStyle(color:Colors.white))),
       ],
     ));
   }
@@ -114,43 +115,43 @@ class _Page4 extends State<Page4> {
             Container(
               decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
               alignment: Alignment.center,
-              width: BOX_SIZE*3,height:BOX_SIZE,
+              width: boxSize*3,height:boxSize,
               child: Text(_resultList[index].myName.isEmpty ? "" : _resultList[index].myName),
             ),
             Container(
               decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
               alignment: Alignment.center,
-              width: BOX_SIZE,height: BOX_SIZE,
-              child: Text(_gameResult[index].length > 0 ? _getMyPoint(_gameResult[index][0].toString()) : ""),
+              width: boxSize,height: boxSize,
+              child: Text(gameResult[index].length > 0 ? _getMyPoint(gameResult[index][0].toString()) : ""),
             ),
             Container(
               decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
               alignment: Alignment.center,
-              width: BOX_SIZE,height: BOX_SIZE,
-              child: Text(_gameResult[index].length > 1 ? _getMyPoint(_gameResult[index][1].toString()) : ""),
+              width: boxSize,height: boxSize,
+              child: Text(gameResult[index].length > 1 ? _getMyPoint(gameResult[index][1].toString()) : ""),
             ),
             Container(
               decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
               alignment: Alignment.center,
-              width: BOX_SIZE,height: BOX_SIZE,
-              child: Text(_gameResult[index].length > 2 ? _getMyPoint(_gameResult[index][2].toString()) : ""),
+              width: boxSize,height: boxSize,
+              child: Text(gameResult[index].length > 2 ? _getMyPoint(gameResult[index][2].toString()) : ""),
             ),
             Container(
               decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
               alignment: Alignment.center,
-              width: BOX_SIZE,height: BOX_SIZE,
-              child: Text(_gameResult[index].length > 3 ? _getMyPoint(_gameResult[index][3].toString()) : ""),
+              width: boxSize,height: boxSize,
+              child: Text(gameResult[index].length > 3 ? _getMyPoint(gameResult[index][3].toString()) : ""),
             ),
             Container(
               decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
               alignment: Alignment.center,
-              width: BOX_SIZE,height: BOX_SIZE,
-              child: Text(_gameResult[index].length > 4 ? _getMyPoint(_gameResult[index][4].toString()) : ""),
+              width: boxSize,height: boxSize,
+              child: Text(gameResult[index].length > 4 ? _getMyPoint(gameResult[index][4].toString()) : ""),
             ),
             Container(
               decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
               alignment: Alignment.center,
-              width: BOX_SIZE*2,height: BOX_SIZE,
+              width: boxSize*2,height: boxSize,
               child: Text(_resultList[index].myMatchPoint.toString(),style:const TextStyle(fontWeight: FontWeight.bold)),
             ),
           ],
@@ -160,43 +161,43 @@ class _Page4 extends State<Page4> {
             Container(
               decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
               alignment: Alignment.center,
-              width: BOX_SIZE*3,height:BOX_SIZE,
+              width: boxSize*3,height:boxSize,
               child: Text(_resultList[index].yourName.isEmpty ? "" : _resultList[index].yourName),
             ),
             Container(
               decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
               alignment: Alignment.center,
-              width: BOX_SIZE,height: BOX_SIZE,
-              child: Text(_gameResult[index].length > 0 ? _getYourPoint(_gameResult[index][0].toString()) : ""),
+              width: boxSize,height: boxSize,
+              child: Text(gameResult[index].length > 0 ? _getYourPoint(gameResult[index][0].toString()) : ""),
             ),
             Container(
               decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
               alignment: Alignment.center,
-              width: BOX_SIZE,height: BOX_SIZE,
-              child: Text(_gameResult[index].length > 1 ? _getYourPoint(_gameResult[index][1].toString()) : ""),
+              width: boxSize,height: boxSize,
+              child: Text(gameResult[index].length > 1 ? _getYourPoint(gameResult[index][1].toString()) : ""),
             ),
             Container(
               decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
               alignment: Alignment.center,
-              width: BOX_SIZE,height: BOX_SIZE,
-              child: Text(_gameResult[index].length > 2 ? _getYourPoint(_gameResult[index][2].toString()) : ""),
+              width: boxSize,height: boxSize,
+              child: Text(gameResult[index].length > 2 ? _getYourPoint(gameResult[index][2].toString()) : ""),
             ),
             Container(
               decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
               alignment: Alignment.center,
-              width: BOX_SIZE,height: BOX_SIZE,
-              child: Text(_gameResult[index].length > 3 ? _getYourPoint(_gameResult[index][3].toString()) : ""),
+              width: boxSize,height: boxSize,
+              child: Text(gameResult[index].length > 3 ? _getYourPoint(gameResult[index][3].toString()) : ""),
             ),
             Container(
               decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
               alignment: Alignment.center,
-              width: BOX_SIZE,height: BOX_SIZE,
-              child: Text(_gameResult[index].length > 4 ? _getYourPoint(_gameResult[index][4].toString()) : ""),
+              width: boxSize,height: boxSize,
+              child: Text(gameResult[index].length > 4 ? _getYourPoint(gameResult[index][4].toString()) : ""),
             ),
             Container(
               decoration:const BoxDecoration(border:Border(left:BorderSide(color:Colors.grey),right:BorderSide(color:Colors.grey),bottom:BorderSide(color:Colors.grey))),
               alignment: Alignment.center,
-              width: BOX_SIZE*2,height: BOX_SIZE,
+              width: boxSize*2,height: boxSize,
               child: Text(_resultList[index].youMatchPoint.toString(),style:const TextStyle(fontWeight: FontWeight.bold)),
             ),
           ],
